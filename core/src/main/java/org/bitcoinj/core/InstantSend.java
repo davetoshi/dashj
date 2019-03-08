@@ -791,7 +791,8 @@ public class InstantSend {
             while (itVote.hasNext())
             {
                 Map.Entry<Sha256Hash, TransactionLockVote> vote = itVote.next();
-                if (vote.getValue().isExpired(cachedBlockHeight)) {
+                if (vote.getValue().isExpired(cachedBlockHeight) || (vote.getValue().getHeight() == -1 &&
+                        (Utils.currentTimeSeconds() - vote.getValue().getTimeCreated() > (INSTANTSEND_TIMEOUT_SECONDS * 15)))) {
                     log.info("instantsend--CInstantSend::CheckAndRemove -- Removing expired vote: txid="+vote.getValue().getTxHash()+"  masternode=" + vote.getValue().getOutpointMasternode().toStringShort());
                     //mapTxLockVotes.remove(itVote);
                     itVote.remove();
